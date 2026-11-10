@@ -36,9 +36,9 @@
       {% for servicio in servicios %}
       {# tr: una fila por servicio; border-t dibuja la línea gris de arriba #}
       <tr class="border-t border-slate-200">
-        {# servicio.nombre: accede a la clave 'nombre' del diccionario actual #}
-        <td class="px-4 py-2">{{ servicio.nombre }}</td>
-        {# servicio.precio: accede a la clave 'precio'; el $ es texto fijo antes del número #}
+        {# antes decía servicio.nombre; ahora servicio.titulo, igual que el campo de models.py #}
+        <td class="px-4 py-2">{{ servicio.titulo }}</td>
+        {# el precio no cambia: el campo del modelo también se llama "precio" #}
         <td class="px-4 py-2">${{ servicio.precio }}</td>
       {# cierra la fila de este servicio #}
       </tr>
