@@ -48,14 +48,25 @@ INSTALLED_APPS = [
     'core'
 ]
 
+# MIDDLEWARE: lista de "filtros" por los que pasa cada petición antes de llegar a tu vista, en este orden
 MIDDLEWARE = [
+    # SecurityMiddleware: agrega cabeceras de seguridad básicas a cada respuesta
     'django.middleware.security.SecurityMiddleware',
+    # WhiteNoiseMiddleware: ← ESTA ES LA ÚNICA LÍNEA NUEVA; entrega los archivos CSS/JS/imágenes
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # SessionMiddleware: habilita las sesiones (login, carrito, etc.)
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # CommonMiddleware: ajustes generales de peticiones/respuestas
     'django.middleware.common.CommonMiddleware',
+    # CsrfViewMiddleware: protege los formularios contra ataques CSRF
     'django.middleware.csrf.CsrfViewMiddleware',
+    # AuthenticationMiddleware: asocia cada petición con el usuario logueado (si hay uno)
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # MessageMiddleware: habilita mensajes de una sola vista (ej. "guardado con éxito")
     'django.contrib.messages.middleware.MessageMiddleware',
+    # XFrameOptionsMiddleware: evita que tu sitio se cargue dentro de un <iframe> ajeno
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+# cierre de la lista MIDDLEWARE
 ]
 
 ROOT_URLCONF = 'proyecto.urls'
@@ -139,8 +150,28 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
+# STATIC_URL: ya existía — la dirección web donde se publican los estáticos (ej. /static/admin/css/base.css)
 STATIC_URL = 'static/'
 
+# STATIC_ROOT: NUEVO — carpeta "staticfiles" donde collectstatic junta TODOS los CSS/JS/imágenes del proyecto
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# STORAGES: NUEVO — le dice a Django cómo guardar archivos
+STORAGES = {
+    # "default": archivos que suban los usuarios; se deja el sistema normal de Django (obligatorio declararlo)
+    "default": {
+        # FileSystemStorage: guarda en disco, igual que antes de este cambio
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    # cierre de la config de "default"
+    },
+    # "staticfiles": tus CSS/JS/imágenes; whitenoise los comprime y les pone una "huella" en el nombre
+    "staticfiles": {
+        # CompressedManifestStaticFilesStorage: el almacenamiento optimizado que trae whitenoise
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    # cierre de la config de "staticfiles"
+    },
+# cierre del diccionario STORAGES
+}
 
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
