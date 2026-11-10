@@ -16,24 +16,24 @@ import pymysql
 # Hace que Django use pymysql como si fuera el driver oficial de MySQL para Python
 pymysql.install_as_MySQLdb()
 
-# config: función de python-decouple que lee valores del archivo .env
-from decouple import config
+# Csv: convierte "a,b,c" del .env en la lista ['a','b','c']
+from decouple import config, Csv
 
+# se lee de .env (local) o del panel de Render (producción)
+SECRET_KEY = config('SECRET_KEY')
+
+# default=False: si falta la variable, queda apagado (lo seguro); cast=bool convierte "True"/"False" en booleano
+DEBUG = config('DEBUG', default=False, cast=bool)
+
+# dominios permitidos, separados por comas en la variable
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='', cast=Csv())
+
+# direcciones completas (con https://) desde las que se aceptan formularios, como el login de /admin
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='', cast=Csv())
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4hh7#9htf()3umyoxmwl7lk#)_+b=fz!#kaxtq2l6#@3xq1vug'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
 
 
 # Application definition
